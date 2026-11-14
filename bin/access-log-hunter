@@ -1,0 +1,23 @@
+#!/usr/bin/env lua5.4
+local dir = arg[0]:match("^(.*)/bin/[^/]*$") or "."
+package.path = dir .. "/src/?.lua;" .. package.path
+local H = require("hunter")
+
+local usage = "usage: access-log-hunter <access.log> [--html] [--min-score N] [--fail-on-find]\nExit: 0 ok, 1 findings with --fail-on-find, 2 bad input.\n"
+if not arg[1] or arg[1]:sub(1, 2) == "--" then io.stderr:write(usage); os.exit(2) end
+local html, fail, min = false, false, 4
+local i = 2
+while i <= #arg do
+  local a = arg[i]
+  if a == "--html" then html = true
+  elseif a == "--fail-on-find" then fail = true
+  elseif a == "--min-score" and arg[i + 1] and tonumber(arg[i + 1]) then min = tonumber(arg[i + 1]); i = i + 1
+  else io.stderr:write("error: bad option " .. a .. "\n" .. usage); os.exit(2) end
+  i = i + 1
+end
+local f, err = io.open(arg[1], "r")
+if not f then io.stderr:write("error: " .. tostring(err) .. "\n"); os.exit(2) end
+local r = H.analyze(f:lines(), { min_score = min })
+f:close()
+io.write(html and H.render_html(r) or H.render_text(r))
+os.exit((fail and #r.offenders > 0) and 1 or 0)
