@@ -2,6 +2,8 @@
 
 Every public web server is probed all day: SQL injection, path traversal, log4shell, scanners hunting for `.env` files. access-log-hunter reads an access log and tells you which IPs are attacking, with what, and how hard.
 
+![Terminal demo of access-log-hunter on its sample data](docs/demo.svg)
+
 **Live demo:** https://jvch0512.github.io/access-log-hunter/ (a report on the synthetic log in `examples/`)
 
 Lua 5.4, no dependencies, about 150 lines of logic.
